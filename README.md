@@ -1,3 +1,10 @@
+[![Go Report Card](https://goreportcard.com/badge/github.com/jspc/synthdown)](https://goreportcard.com/report/github.com/jspc/synthdown)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=jspc_synthdown&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=jspc_synthdown)
+[![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=jspc_synthdown&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=jspc_synthdown)
+[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=jspc_synthdown&metric=bugs)](https://sonarcloud.io/summary/new_code?id=jspc_synthdown)
+[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=jspc_synthdown&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=jspc_synthdown)
+[![Coverage Status](https://coveralls.io/repos/github/jspc/synthdown/badge.svg?branch=main)](https://coveralls.io/github/jspc/synthdown?branch=main)
+
 # synthdown
 
 Synthdown is:
