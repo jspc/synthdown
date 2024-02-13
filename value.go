@@ -12,9 +12,9 @@ import (
 //
 // The zero value (ie: when none of the inner values are set) is a 0
 type Value struct {
-	Str   *string  `  @String`
-	Float *float64 `| @Float`
-	Int   *int     `| @Int`
+	Str   *string  `parser:"@String"`
+	Float *float64 `parser:"| @Float"`
+	Int   *int     `parser:"| @Int"`
 }
 
 // Float64 returns the float64 representation of a Value, casting appropriately
