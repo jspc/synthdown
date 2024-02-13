@@ -1,0 +1,105 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - '*'
+    tags:
+      - '*'
+
+permissions: read-all
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4.1.1
+
+    - uses: actions/setup-go@v5
+      with:
+        go-version: '>=1.22.0'
+
+    - name: Build
+      run: |
+        go build
+
+    - name: Test
+      run: |
+        go test -covermode=count -coverprofile=coverage.out -v ./...
+
+    - name: Convert coverage to lcov
+      uses: jandelgado/gcov2lcov-action@v1.0.9
+
+    - name: Coveralls
+      uses: coverallsapp/github-action@v2.2.3
+      with:
+        github-token: ${{ secrets.github_token }}
+        path-to-lcov: coverage.lcov
+
+    - name: gosec
+      run: |
+        go install github.com/securego/gosec/v2/cmd/gosec@latest
+        gosec ./...
+
+    - name: golangci-lint
+      run: |
+        go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.51.2
+        golangci-lint run --skip-files='.*_test.go'
+
+    - name: Archive stuff
+      uses: actions/upload-artifact@v4.0.0
+      with:
+        name: build-artefacts
+        path: |
+          coverage.out
+
+  sonarcloud:
+    needs: test
+    runs-on: ubuntu-latest
+    if: ${{ github.triggering_actor != 'dependabot[bot]' }}
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        # Disabling shallow clone is recommended for improving relevancy of reporting
+        fetch-depth: 0
+
+    - name: Download artefacts
+      uses: actions/download-artifact@v4.1.0
+      with:
+        name: build-artefacts
+
+    - name: SonarCloud Scan
+      uses: sonarsource/sonarcloud-github-action@master
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+
+  build-and-push:
+    needs: sonarcloud
+    permissions:
+      contents: write
+
+    runs-on: ubuntu-latest
+    if: contains(github.ref, 'refs/tags')
+    steps:
+    - uses: actions/checkout@v4.1.1
+
+    - name: Download artefacts
+      uses: actions/download-artifact@v4.1.0
+      with:
+        name: build-artefacts
+
+    - name: Generate SBOM
+      uses: CycloneDX/gh-gomod-generate-sbom@v2
+      with:
+        version: v1
+        args: mod -licenses -json -output bom.json
+
+    - name: Release
+      uses: softprops/action-gh-release@v1
+      with:
+        files: |
+          bom.json
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

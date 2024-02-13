@@ -59,6 +59,7 @@ type Arg struct {
 //   - `*participle.UnexpectedTokenError` - the synthdown notation is invalid
 //   - `FirstPatchHasInputError` - the first module in a patch has an input, which is an absurdity
 func New(fn string) (p *SynthdownFile, err error) {
+	// #nosec: G304
 	f, err := os.Open(fn)
 	if err != nil {
 		return
