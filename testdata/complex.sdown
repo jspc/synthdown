@@ -1,0 +1,3 @@
+square[](out) -> (c1)mixer[c1:10, out:10](out) -> (in)speaker[](out);
+saw[](out) -> (c2)mixer[c2:10](out);
+sine[](out) -> (c3)mixer[c3:7.5](out);
