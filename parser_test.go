@@ -1,4 +1,4 @@
-package main
+package synthdown
 
 import (
 	"bytes"
@@ -59,7 +59,7 @@ func TestNew(t *testing.T) {
 func TestNewPatch_Errors(t *testing.T) {
 	var (
 		ute  *participle.UnexpectedTokenError
-		fphi errFirstPatchHasInput
+		fphi FirstPatchHasInputError
 	)
 
 	for _, test := range []struct {

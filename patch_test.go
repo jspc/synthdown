@@ -1,4 +1,4 @@
-package main
+package synthdown
 
 import (
 	"testing"
@@ -22,8 +22,8 @@ func TestPatch_Errors(t *testing.T) {
 						Line:     1,
 						Column:   1,
 					},
-					Input: &InputOutput{
-						Value: "trigger",
+					Input: &Jack{
+						Name: "trigger",
 					},
 					Name: "flooper",
 					Args: []Arg{
@@ -34,7 +34,7 @@ func TestPatch_Errors(t *testing.T) {
 					},
 				},
 			},
-		}, "patch described at test.sdown:1:1 has an input"},
+		}, "the first module of the patch described at test.sdown:1:1 has an input"},
 	} {
 		t.Run(test.name, func(t *testing.T) {
 			err := test.p.Validate()
