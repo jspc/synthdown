@@ -67,7 +67,7 @@ func init() {
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is ~/.config/synthdown/config.yaml)")
 
 	rootCmd.PersistentFlags().StringP("file", "f", "", "Synthdown File to read")
-	panicOnErr(viper.BindPFlag("file", rootCmd.PersistentFlags().Lookup("file")))
+	cobra.CheckErr(viper.BindPFlag("file", rootCmd.PersistentFlags().Lookup("file")))
 }
 
 // initConfig reads in config file and ENV variables if set.
@@ -88,11 +88,6 @@ func initConfig() {
 	viper.AutomaticEnv() // read in environment variables that match
 
 	// If a config file is found, read it in.
-	panicOnErr(viper.ReadInConfig())
-}
-
-func panicOnErr(err error) {
-	if err != nil {
-		panic(err)
-	}
+	// #nosec: G104
+	viper.ReadInConfig()
 }

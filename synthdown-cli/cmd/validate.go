@@ -22,10 +22,19 @@ THE SOFTWARE.
 package cmd
 
 import (
+	"fmt"
+	"os"
+
 	"github.com/jspc/synthdown"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
+
+const errInvalid = 1
+
+var failer failerFunc = os.Exit
+
+type failerFunc = func(int)
 
 // validateCmd represents the validate command
 var validateCmd = &cobra.Command{
@@ -35,10 +44,12 @@ var validateCmd = &cobra.Command{
 
 This command can be used to read files, and validate them as synthdown`,
 	SilenceUsage: true,
-	RunE: func(cmd *cobra.Command, args []string) (err error) {
-		_, err = synthdown.New(viper.GetString("file"))
-
-		return
+	Run: func(cmd *cobra.Command, args []string) {
+		_, err := synthdown.New(viper.GetString("file"))
+		if err != nil {
+			fmt.Printf("%v\n", err)
+			failer(errInvalid)
+		}
 	},
 }
 
