@@ -7,10 +7,26 @@ import (
 	"github.com/alecthomas/participle/v2/lexer"
 )
 
+// DoubledUpJacksError returns when one or more jacks exist in many patches
+// yet shouldn't.
+//
+// This error may be incorrect for a number of reasons, including:
+//
+//  1. Not all jacks on a module have a unique name, such as the sequencer on a POM-400
+//  2. You're using a stacking jack, or a splitter, or a multiplier
+//
+// In these instances the solution is to:
+//
+//  1. Artificially number each jack, like 'output1', 'output2'
+//  2. Set `StackedPatches: true` in the synthdown.ValidationConfiguration struct
+//
+// passed to (SynthdownFile).Validate()
 type DoubledUpJacksError struct {
 	errs []doubledUpJackError
 }
 
+// Error returns a message indicating the number of errors found, plus the location
+// of each individual error
 func (e DoubledUpJacksError) Error() string {
 	errStrings := make([]string, len(e.errs))
 	for i, err := range e.errs {
@@ -59,6 +75,7 @@ func (m moduleJackMapping) addMapping(module, jack string, pos lexer.Position) {
 	m[module][jack] = append(m[module][jack], pos)
 }
 
+// errors combines every doubled-up jack into a single error for convenience
 func (m moduleJackMapping) errors() error {
 	errs := make([]doubledUpJackError, 0)
 
