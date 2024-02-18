@@ -24,7 +24,7 @@ A simple patch might look like:
 ```
 sequencer[bpm: 90](output)
   -> (trigger)envelope[A:0, D:2, S:0, R:2](out)
-  -> (control)sine[Level: 10, Tone: 1.5](out);
+  -> (control)sine[Level: 10, Tone: 1.5];
 ```
 
 This, in essence, says
@@ -41,7 +41,7 @@ A module, such as `(trigger)envelope[A:0, D:2, S:0, R:2](out)` is made up of:
 * `envelope[A:0, D:2, S:0, R:2]` - the module its self (`envelope`) and whichever knobs and twiddler values apply
 * `(out)` - the output jack
 
-There is one special case; the first module in a patch. This will error if an input jack is set, since setting an input to the first module is an absurdity.
+There are two special cases; the first module in a patch, and the last module in a patch. The first must not have an input, and the last must not have an output since this would be an absurdity.
 
 Finally, a patch ends with a semicolon; this allows us to add many patches to a single input file, should we want to.
 
@@ -52,7 +52,7 @@ The following [EBNF](https://en.wikipedia.org/wiki/Extended_Backus%E2%80%93Naur_
 ```ebnf
 SynthdownFile = (Patch ";")* .
 Patch = Module ("-" ">" Module)* .
-Module = Jack? <ident> "[" Arg* ("," Arg)* "]" Jack .
+Module = Jack? <ident> "[" Arg* ("," Arg)* "]" Jack? .
 Jack = "(" <ident> ")" .
 Arg = <ident> ":" Value .
 Value = <string> | <float> | <int> .
