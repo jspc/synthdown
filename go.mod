@@ -4,7 +4,7 @@ go 1.21
 
 require (
 	github.com/alecthomas/participle/v2 v2.1.1
-	github.com/spf13/cobra v1.8.0
+	github.com/spf13/cobra v1.8.1
 	github.com/spf13/viper v1.18.2
 )
 
